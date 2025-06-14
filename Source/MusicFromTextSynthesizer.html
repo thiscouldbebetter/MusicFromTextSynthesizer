@@ -1,0 +1,60 @@
+<html>
+<body>
+
+<div id="divUi">
+
+	<h3>Music from Text Synthesizer</h3>
+
+	<p>
+		Enter a song in the required format, then
+		click the buttons to play or download it.
+	</p>
+
+
+	<div>
+		<label for="inputSongName">Song Name:</label>
+		<input id="inputSongName" value="DanceOfTheSugarPlumFairies"></input>
+		<button onclick="UiEventHandler.buttonDemo_Clicked()">Load Demo</button>
+		<button onclick="UiEventHandler.buttonClear_Clicked()">Clear</button>
+	</div>
+	<div>
+		<div>
+			<label for="textareaSongAsStrings">Song Content:</label>
+		</div>
+		
+		<textarea id="textareaSongAsStrings" cols="80" rows="8">
+O:3;R.1;____________R.4;G.8;E.8;G.4;F#4;D#4;E.4;D.8;D.8;D.8
+O:2;G.4;B.4;G.4;B.4;G.4;B.4;____G.4;B.4;G.4;B.4;G.4;____B.4
+		</textarea>
+	</div>
+	</div>
+		<button id="buttonPlaySong" onclick="UiEventHandler.buttonPlaySong_Clicked();">Play</button>
+		<button id="buttonDownloadSong" onclick="UiEventHandler.buttonDownloadSong_Clicked();">Download</button>
+	</div>
+
+</div>
+
+<script type="text/javascript" src="MusicToWavFileConverter.js"></script>
+<script type="text/javascript" src="UiEventHandler.js"></script>
+
+<script type="text/javascript" src="Music/Music.js"></script>
+<script type="text/javascript" src="Music/Music_Movement.js"></script>
+<script type="text/javascript" src="Music/Music_Note.js"></script>
+<script type="text/javascript" src="Music/Music_NoteLetter.js"></script>
+<script type="text/javascript" src="Music/Music_Octave.js"></script>
+<script type="text/javascript" src="Music/Music_Part.js"></script>
+<script type="text/javascript" src="Music/Music_Pitch.js"></script>
+<script type="text/javascript" src="Music/Music_Song.js"></script>
+<script type="text/javascript" src="Music/Music_Tempo.js"></script>
+<script type="text/javascript" src="Music/Music_TimeSignature.js"></script>
+<script type="text/javascript" src="Music/Music_Voice.js"></script>
+<script type="text/javascript" src="Music/Music_Volume.js"></script>
+
+<script type="text/javascript" src="Utility/Base64Encoder.js"></script>
+<script type="text/javascript" src="Utility/ByteStreamLittleEndian.js"></script>
+
+<script type="text/javascript" src="WavFile/WavFile.js"></script>
+
+
+</body>
+</html>
