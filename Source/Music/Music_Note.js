@@ -24,15 +24,31 @@ class Music_Note
 			noteLetter
 		);
 
+		var duration = parseFloat(durationAsString);
+
 		var returnValue = new Music_Note
 		(
-			[
-				pitch
-			],
+			[ pitch ],
 			volume,
-			parseFloat(durationAsString)
+			duration
 		);
 
+		if (returnValue.valid() == false)
+		{
+			throw new Error("Error attempting to parse note from string: '" + noteAsString + "'.");
+		}
+
 		return returnValue;
+	}
+
+	valid()
+	{
+		var isValid =
+			this.pitches != null
+			&& this.pitches.some(x => x.valid() == false) == false
+			&& this.volume != null
+			&& this.duration != null;
+
+		return isValid;
 	}
 }

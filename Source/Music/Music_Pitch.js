@@ -15,4 +15,13 @@ class Music_Pitch
 
 		return returnValue;
 	}
+
+	valid()
+	{
+		var isValid =
+			this.octave != null
+			&& this.noteLetter != null;
+
+		return isValid;
+	}
 }

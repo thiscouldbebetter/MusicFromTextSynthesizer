@@ -9,7 +9,7 @@ class Music_Part
 		this.notes = notes;
 	}
 
-	static parseFromString(partAsString)
+	static fromString(partAsString)
 	{
 		var octaves = Music_Octave.Instances();
 		var volumes = Music_Volume.Instances();
@@ -25,7 +25,8 @@ class Music_Part
 		partAsString = partAsString.split("\t").join("");
 		partAsString = partAsString.split("|").join("");
 
-		var notesAsStrings = partAsString.split(";");
+		var notesAsStrings =
+			partAsString.split(";").filter(x => x.trim() != "");
 		var numberOfNotes = notesAsStrings.length;
 		var notes = [];
 
@@ -37,7 +38,7 @@ class Music_Part
 				volumeCurrent, octaveCurrent, noteAsString
 			);
 			var noteLetter = note.pitches[0].noteLetter;
-			if (noteLetter.isControlCode == true)
+			if (noteLetter.isControlCode)
 			{
 				var controlCodeArgument = note.duration;
 

@@ -9,19 +9,40 @@ class Music_Movement
 		this.parts = parts;
 	}
 
-	static parseFromStrings(partsAsStrings)
+	static fromString(stringToParse)
 	{
-		var numberOfParts = partsAsStrings.length;
-		var parts = [];
-		for (var p = 0; p < numberOfParts; p++)
+		var newline = "\n";
+		var blankLine = newline + newline;
+		var multipartPassagesAsStrings =
+			stringToParse.split(blankLine);
+
+		var passagesCount = multipartPassagesAsStrings.length;
+
+		var partGroupsForPassagesAsStringArrays =
+			multipartPassagesAsStrings.map(x => x.split(newline) );
+
+		var partsForPassage0AsStrings =
+			partGroupsForPassagesAsStringArrays[0];
+
+		var partsCount = partsForPassage0AsStrings.length;
+
+		var partsAsStrings = partsForPassage0AsStrings;
+
+		for (var i = 1; i < passagesCount; i++)
 		{
-			var partAsString = partsAsStrings[p].trim();
-			if (partAsString.length > 0)
+			var partsForPassageAsStrings =
+				partGroupsForPassagesAsStringArrays[i];
+
+			for (var j = 0; j < partsForPassageAsStrings.length; j++)
 			{
-				var part = Music_Part.parseFromString(partAsString);
-				parts.push(part);
+				var partForPassageAsString =
+					partsForPassageAsStrings[j];
+
+				partsAsStrings[j] += partForPassageAsString;
 			}
 		}
+
+		var parts = partsAsStrings.map(x => Music_Part.fromString(x) );
 
 		var returnMovement = new Music_Movement
 		(

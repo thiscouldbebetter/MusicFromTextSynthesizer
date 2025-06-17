@@ -21,8 +21,15 @@ class UiEventHandler
 
 		var songContentAsStrings =
 		[
-			"O:3;R.1;____________R.4;G.8;E.8;G.4;F#4;D#4;E.4;D.8;D.8;D.8",
-			"O:2;G.4;B.4;G.4;B.4;G.4;B.4;____G.4;B.4;G.4;B.4;G.4;____B.4"
+			"// \"Dance of the Sugar-Plum Fairies\",",
+			"// from _The Nutcracker_,",
+			"// by P.I. Tchaikovsky",
+			"",
+			"O:3;R.1;____________R.4;G.8;E.8;G.4;F#4;D#4;____E.4;D.8;D.8;____D.8;R.8;",
+			"O:2;G.4;B.4;G.4;B.4;G.4;B.4;____G.4;B.4;G.4;____B.4;G.4;________B.4;____",
+			"",
+			"O:3;C#8;C#8;C#8;R.8;C.8;C.8;C.8;R.8;O:2;B.8;O:3;E.8;C.8;E.8;O:2;B.8;R.4;",
+			"O:2;G.4;____B.4;____G.4;____B.4;________G.4;____B.4;____G.4;________B.4;",
 		];
 
 		var newline = "\n";
@@ -93,18 +100,12 @@ class UiEventHandler
 		var textareaSongAsStrings =
 			d.getElementById("textareaSongAsStrings");
 		var songAsString = textareaSongAsStrings.value;
-		var songAsStrings = songAsString.split("\n");
 
-		var songToSynthesize = new Music_Song
+		var songToSynthesize = Music_Song.fromNameAndString
 		(
 			songName,
-			[
-				Music_Movement.parseFromStrings
-				(
-					songAsStrings
-				)
-			]
-		);	
+			songAsString
+		);
 
 		var songAsWavFile = MusicToWavFileConverter.convertSongToWavFile
 		(
