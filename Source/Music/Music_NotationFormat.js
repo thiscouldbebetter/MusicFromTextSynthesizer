@@ -38,10 +38,12 @@ class Music_NotationFormat_Instances
 	constructor()
 	{
 		this.A = new Music_NotationFormat("A", this.songParse_A);
+		this.B = new Music_NotationFormat("B", this.songParse_B);
 
 		this._All =
 		[
-			this.A
+			this.A,
+			this.B
 		];
 
 		this._AllByName = new Map(this._All.map(x => [x.name, x] ) );
@@ -143,6 +145,16 @@ class Music_NotationFormat_Instances
 		return returnMovement;
 	}
 
+	songParse_AB_Movement_Part_Dynamic(stringToParse)
+	{
+		var codeAndValue = stringToParse.split(":");
+		var code = codeAndValue[0];
+		var dynamicForCode = Music_Dynamic.byCode(code);
+		var value = codeAndValue[1];
+		var returnDynamic = dynamicForCode.clone().valueSet(value);
+		return returnDynamic;
+	}
+
 	// A.
 
 	songParse_A(name, stringToParse)
@@ -178,7 +190,7 @@ class Music_NotationFormat_Instances
 
 		partAsString = partAsString.split(" ").join("");
 		partAsString = partAsString.split("-").join("");
-		partAsString = partAsString.split("_").join("");
+		partAsString = partAsString.split(".").join("");
 		partAsString = partAsString.split("\t").join("");
 		partAsString = partAsString.split("|").join("");
 
@@ -223,7 +235,7 @@ class Music_NotationFormat_Instances
 					}
 					else if (noteLetter == noteLetters.Volume)
 					{
-						volumeCurrent = volumes.byIndex(controlCodeArgument);
+						volumeCurrent = volumes.byCode(controlCodeArgument);
 					}
 				}
 
@@ -236,12 +248,7 @@ class Music_NotationFormat_Instances
 
 	songParse_A_Movement_Part_Dynamic(stringToParse)
 	{
-		var codeAndValue = stringToParse.split(":");
-		var code = codeAndValue[0];
-		var dynamicForCode = Music_Dynamic.byCode(code);
-		var value = codeAndValue[1];
-		var returnDynamic = dynamicForCode.clone().valueSet(value);
-		return returnDynamic;
+		return this.songParse_AB_Movement_Part_Dynamic(stringToParse)
 	}
 
 	songParse_A_Movement_Part_Note
@@ -285,6 +292,99 @@ class Music_NotationFormat_Instances
 		}
 
 		return returnValue;
+	}
+
+	// B.
+
+	songParse_B(name, stringToParse)
+	{
+		var movementParse =
+			(x) => this.songParse_B_Movement(x);
+		return this.songParse_AB(name, stringToParse, movementParse);
+	}
+
+	songParse_B_Movement(stringToParse)
+	{
+		var partParse =
+			(x) => this.songParse_B_Movement_Part(x);
+		return this.songParse_AB_Movement(stringToParse, partParse);
+	}
+
+	songParse_B_Movement_Part(stringToParse)
+	{
+		stringToParse = stringToParse.split(".").join(" ");
+
+		var octaves = Music_Octave.Instances();
+		var volumes = Music_Volume.Instances();
+		var noteLetters = Music_NoteLetter.Instances();
+		var voices = Music_Voice.Instances();
+
+		var notesOrDynamics = [];
+
+		var part = new Music_Part
+		(
+			"[part from string]",
+			voices.Sine, // hack
+			volumes.Medium, // hack
+			notesOrDynamics
+		);
+
+		var charsPerQuarterNote = 4; // hack
+
+		var notesOrDynamicsAsStrings =
+			stringToParse.split(" ");
+		for (var nod = 0; nod < notesOrDynamicsAsStrings.length; nod++)
+		{
+			var noteOrDynamicAsString =
+				notesOrDynamicsAsStrings[nod];
+
+			var noteLetterSymbol =
+				noteOrDynamicAsString.substr(0, 2);
+
+			var noteLetter =
+				Music_NoteLetter.bySymbol(noteLetterSymbol);
+
+			var isDynamicNotNote = (noteLetter == null);
+
+			if (isDynamicNotNote)
+			{
+				var dynamicAsString = noteOrDynamicAsString;
+				var dynamic =
+					this.songParse_B_Movement_Part_Dynamic(dynamicAsString);
+				notesOrDynamics[nod] = dynamic;
+				dynamic.applyToPart(part);
+			}
+			else
+			{
+				var octave = part.octaveCurrent;
+
+				var pitch =
+					Music_Pitch.fromOctaveAndNoteLetter(octave, noteLetter);
+
+				var volume = part.volumeCurrent;
+
+				var noteAsString = noteOrDynamicAsString;
+				var durationInChars = noteAsString.length;
+				var durationInQuarterNotes =
+					durationInChars / charsPerQuarterNote;
+
+				var note = Music_Note.fromPitchVolumeAndDurationInQuarterNotes
+				(
+					pitch,
+					volume,
+					durationInQuarterNotes
+				);
+
+				notesOrDynamics.push(note);
+			}
+		}
+
+		return part;
+	}
+
+	songParse_B_Movement_Part_Dynamic(stringToParse)
+	{
+		return this.songParse_AB_Movement_Part_Dynamic(stringToParse)
 	}
 
 }

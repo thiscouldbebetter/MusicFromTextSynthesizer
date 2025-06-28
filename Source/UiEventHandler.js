@@ -1,6 +1,29 @@
 
 class UiEventHandler
 {
+	static body_Loaded()
+	{
+		var d = document;
+		var selectNotationFormat =
+			d.getElementById("selectNotationFormat");
+		var notationFormats = Music_NotationFormat.Instances()._All;
+		var notationFormatNames = notationFormats.map(x => x.name);
+		var notationFormatsAsOptions =
+			notationFormatNames.map
+			(
+				x =>
+				{
+					var o = d.createElement("option");
+					o.innerHTML = x;
+					return o;
+				}
+			);
+		notationFormatsAsOptions.forEach
+		(
+			x => selectNotationFormat.options.add(x)
+		);
+	}
+
 	static buttonClear_Clicked()
 	{
 		var d = document;
@@ -22,29 +45,31 @@ class UiEventHandler
 		var notationFormatName =
 			selectNotationFormat.value;
 
-		var songName = "DanceOfTheSugarPlumFairies";
-
+		var songName;;
 		var songContentAsLines;
+
 		if (notationFormatName == "A")
 		{
+			songName = "DanceOfTheSugarPlumFairies";
 			songContentAsLines =
 			[
 				"// \"Dance of the Sugar-Plum Fairies\",",
 				"// from _The Nutcracker_,",
 				"// by P.I. Tchaikovsky",
 				"",
-				"O:3;R.1;____________R.4;G.8;E.8;G.4;F#4;D#4;____E.4;D.8;D.8;____D.8;R.8;",
-				"O:2;G.4;B.4;G.4;B.4;G.4;B.4;____G.4;B.4;G.4;____B.4;G.4;________B.4;____",
+				"O:3;R_1;............R_4;G_8;E_8;G_4;F#4;D#4;....E_4;D_8;D_8;....D_8;R_8;",
+				"O:2;G_4;B_4;G_4;B_4;G_4;B_4;....G_4;B_4;G_4;....B_4;G_4;........B_4;....",
 				"",
-				"O:3;C#8;C#8;C#8;R.8;C.8;C.8;C.8;R.8;O:2;B.8;O:3;E.8;C.8;E.8;O:2;B.8;R.4;",
-				"O:2;G.4;____B.4;____G.4;____B.4;________G.4;____B.4;____G.4;________B.4;",
+				"O:3;C#8;C#8;C#8;R_8;C_8;C_8;C_8;R_8;O:2;B_8;O:3;E_8;C_8;E_8;O:2;B_8;R_4;",
+				"O:2;G_4;....B_4;....G_4;....B_4;........G_4;....B_4;....G_4;........B_4;",
 			];
 		}
 		else if (notationFormatName == "B")
 		{
+			songName = "Scale";
 			songContentAsLines =
 			[
-				"C D E F G A B C B A G F E D C"
+				"C_ D_ E_ F_ G_ A_ B_ O:+ C_ O:- B_ A_ G_ F_ E_ D_ C_"
 			];
 		}
 		else
@@ -109,6 +134,12 @@ class UiEventHandler
 		downloadLink.href = window.URL.createObjectURL(songFileAsBlob);
 		downloadLink.download = songName + ".wav";
 		downloadLink.click();
+	}
+
+	static selectNotationFormat_Changed(selectNotationFormat)
+	{
+		var d = document;
+		this.buttonClear_Clicked();
 	}
 
 	static getSongAsBytes()

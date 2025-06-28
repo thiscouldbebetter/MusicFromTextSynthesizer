@@ -1,11 +1,10 @@
 
 class Music_NoteLetter
 {
-	constructor(symbol, frequencyMultiplier, isControlCode)
+	constructor(symbol, frequencyMultiplier)
 	{
 		this.symbol = symbol;
 		this.frequencyMultiplier = frequencyMultiplier;
-		this.isControlCode = isControlCode;
 	}
 
 	static TonesPerOctave = 12;
@@ -40,6 +39,11 @@ class Music_NoteLetter
 
 		return returnValue;
 	}
+
+	static bySymbol(symbol)
+	{
+		return this.Instances().bySymbol(symbol);
+	}
 }
 
 class Music_NoteLetter_Instances
@@ -48,37 +52,54 @@ class Music_NoteLetter_Instances
 	{
 		var octavesPerTone = Music_NoteLetter.OctavesPerTone;
 
-		this.Rest = new Music_NoteLetter("R.", 0, false);
+		this.Rest = new Music_NoteLetter("R_", 0);
 
-		this.C_ = new Music_NoteLetter("C.", Math.pow(2, 0 * octavesPerTone), false);
-		this.Cs = new Music_NoteLetter("C#", Math.pow(2, 1 * octavesPerTone), false);
-		this.D_ = new Music_NoteLetter("D.", Math.pow(2, 2 * octavesPerTone), false);
-		this.Ds = new Music_NoteLetter("D#", Math.pow(2, 3 * octavesPerTone), false);
-		this.E_ = new Music_NoteLetter("E.", Math.pow(2, 4 * octavesPerTone), false);
-		this.F_ = new Music_NoteLetter("F.", Math.pow(2, 5 * octavesPerTone), false);
-		this.Fs = new Music_NoteLetter("F#", Math.pow(2, 6 * octavesPerTone), false);
-		this.G_ = new Music_NoteLetter("G.", Math.pow(2, 7 * octavesPerTone), false);
-		this.Gs = new Music_NoteLetter("G#", Math.pow(2, 8 * octavesPerTone), false);
-		this.A_ = new Music_NoteLetter("A.", Math.pow(2, 9 * octavesPerTone), false);
-		this.As = new Music_NoteLetter("A#", Math.pow(2, 10 * octavesPerTone), false);
-		this.B_ = new Music_NoteLetter("B.", Math.pow(2, 11 * octavesPerTone), false);
+		this.C 		= new Music_NoteLetter("C_", Math.pow(2, 0 * octavesPerTone) );
+		this.CSharp = new Music_NoteLetter("C#", Math.pow(2, 1 * octavesPerTone) );
+		this.DFlat 	= new Music_NoteLetter("Db", Math.pow(2, 1 * octavesPerTone) );
+		this.D 		= new Music_NoteLetter("D_", Math.pow(2, 2 * octavesPerTone) );
+		this.DSharp = new Music_NoteLetter("D#", Math.pow(2, 3 * octavesPerTone) );
+		this.EFlat 	= new Music_NoteLetter("Eb", Math.pow(2, 3 * octavesPerTone) );
+		this.E 		= new Music_NoteLetter("E_", Math.pow(2, 4 * octavesPerTone) );
+		this.F 		= new Music_NoteLetter("F_", Math.pow(2, 5 * octavesPerTone) );
+		this.FSharp = new Music_NoteLetter("F#", Math.pow(2, 6 * octavesPerTone) );
+		this.GFlat 	= new Music_NoteLetter("Gb", Math.pow(2, 6 * octavesPerTone) );
+		this.G 		= new Music_NoteLetter("G_", Math.pow(2, 7 * octavesPerTone) );
+		this.GSharp = new Music_NoteLetter("G#", Math.pow(2, 8 * octavesPerTone) );
+		this.AFlat 	= new Music_NoteLetter("Ab", Math.pow(2, 8 * octavesPerTone) );
+		this.A 		= new Music_NoteLetter("A_", Math.pow(2, 9 * octavesPerTone) );
+		this.ASharp = new Music_NoteLetter("A#", Math.pow(2, 10 * octavesPerTone) );
+		this.BFlat 	= new Music_NoteLetter("Bb", Math.pow(2, 10 * octavesPerTone) );
+		this.B 		= new Music_NoteLetter("B_", Math.pow(2, 11 * octavesPerTone) );
 
 		this._All = 
 		[
 			this.Rest,
 
-			this.A_, 
-			this.As, 
-			this.B_, 
-			this.C_, 
-			this.Cs, 
-			this.D_, 
-			this.Ds, 
-			this.E_, 
-			this.F_, 
-			this.Fs, 
-			this.G_, 
-			this.Gs,
+			this.A,
+			this.ASharp,
+			this.BFlat,
+			this.B,
+			this.C,
+			this.CSharp,
+			this.DFlat,
+			this.D,
+			this.DSharp,
+			this.EFlat,
+			this.E,
+			this.F,
+			this.FSharp,
+			this.GFlat,
+			this.G,
+			this.GSharp,
+			this.AFlat
 		];
+
+		this._AllBySymbol = new Map(this._All.map(x => [x.symbol, x] ) );
+	}
+
+	bySymbol(symbol)
+	{
+		return this._AllBySymbol.get(symbol);
 	}
 }

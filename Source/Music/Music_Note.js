@@ -8,6 +8,28 @@ class Music_Note
 		this.durationInQuarterNotes = durationInQuarterNotes;
 	}
 
+	static fromPitchVolumeAndDurationInQuarterNotes
+	(
+		pitch, volume, durationInQuarterNotes
+	)
+	{
+		return new Music_Note
+		(
+			[ pitch ], volume, durationInQuarterNotes
+		);
+	}
+
+	static fromPitchesVolumeAndDurationInQuarterNotes
+	(
+		pitches, volume, durationInQuarterNotes
+	)
+	{
+		return new Music_Note
+		(
+			pitches, volume, durationInQuarterNotes
+		);
+	}
+
 	durationInSecondsForMovement(movement)
 	{
 		var durationInTicks =

@@ -1,9 +1,10 @@
 
 class Music_Volume
 {
-	constructor(name, relativeLoudness)
+	constructor(name, code, relativeLoudness)
 	{
 		this.name = name;
+		this.code = code;
 		this.relativeLoudness = relativeLoudness;
 	}
 
@@ -16,9 +17,9 @@ class Music_Volume
 		return this._instances;
 	}
 
-	static byIndex(index)
+	static byCode(code)
 	{
-		return this.Instances().byIndex(index);
+		return this.Instances().byCode(code);
 	}
 }
 
@@ -26,20 +27,26 @@ class Music_Volume_Instances
 {
 	constructor()
 	{
-		this.Quiet = new Music_Volume("Quiet", .001);
-		this.Medium = new Music_Volume("Medium", .01);
-		this.Loud = new Music_Volume("Loud", .1);
+		this.Silent = 		new Music_Volume("Silent", 0, 0);
+		this.Quietest = 	new Music_Volume("Quietest", 1, .001);
+		this.Medium = 		new Music_Volume("Medium", 5, .01);
+		this.Loudest = 		new Music_Volume("Loudest", 9, .1);
+
+		this.Default = this.Medium;
 
 		this._All =
 		[
-			this.Quiet,
+			this.Silent,
+			this.Quietest,
 			this.Medium,
-			this.Loud,
+			this.Loudest
 		];
+
+		this._AllByCode = new Map(this._All.map(x => [x.code, x] ) );
 	}
 
-	byIndex(index)
+	byCode(code)
 	{
-		return this._All[index];
+		return this._AllByCode.get(code);
 	}
 }

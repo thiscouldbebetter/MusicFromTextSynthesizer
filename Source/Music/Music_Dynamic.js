@@ -57,13 +57,45 @@ class Music_Dynamic_Instances
 
 	applyToPart_Octave(part)
 	{
-		var octave = Music_Octave.byIndex(this.value);
+		var octaveIndex = part.octaveCurrent.octaveIndex;
+
+		octaveIndex =
+			this.value == "+"
+			? octaveIndex + 1
+			: this.value == "-"
+			? octaveIndex - 1
+			: isNaN(this.value)
+			? null
+			: parseInt(this.value);
+
+		if (octaveIndex == null)
+		{
+			throw new Error("Octave index is not a number.")
+		}
+
+		var octave = Music_Octave.byIndex(octaveIndex);
 		part.octaveCurrent = octave;
 	}
 
 	applyToPart_Volume(part)
 	{
-		var volume = Music_Volume.byIndex(this.value);
+		var volumeCode = part.volumeCurrent.volumeCode;
+
+		volumeCode =
+			this.value == "+"
+			? volumeCode + 1
+			: this.value == "-"
+			? volumeCode - 1
+			: isNaN(this.value)
+			? null
+			: parseInt(this.value);
+
+		if (volumeCode == null)
+		{
+			throw new Error("Volume Code is not a number.")
+		}
+
+		var volume = Music_Volume.byCode(volumeCode);
 		part.volumeCurrent = volume;
 	}
 

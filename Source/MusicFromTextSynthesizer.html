@@ -1,5 +1,5 @@
 <html>
-<body>
+<body onload="UiEventHandler.body_Loaded()">
 
 <div id="divUi">
 
@@ -12,9 +12,10 @@
 
 	<div>
 		<label for="selectNotationFormat">Notation Format:</label>
-		<select id="selectNotationFormat">
-			<option>A</option>
-		</select>
+		<select
+			id="selectNotationFormat"
+			onchange="UiEventHandler.selectNotationFormat_Changed(this)"
+		></select>
 	</div>
 
 	<div>
@@ -33,11 +34,11 @@
 // from _The Nutcracker_,
 // by P.I. Tchaikovsky
 
-O:3;R.1;____________R.4;G.8;E.8;G.4;F#4;D#4;____E.4;D.8;D.8;____D.8;R.8;
-O:2;G.4;B.4;G.4;B.4;G.4;B.4;____G.4;B.4;G.4;____B.4;G.4;________B.4;____
+O:3;R_1;............R_4;G_8;E_8;G_4;F#4;D#4;....E_4;D_8;D_8;....D_8;R_8;
+O:2;G_4;B_4;G_4;B_4;G_4;B_4;....G_4;B_4;G_4;....B_4;G_4;........B_4;....
 
-O:3;C#8;C#8;C#8;R.8;C.8;C.8;C.8;R.8;O:2;B.8;O:3;E.8;C.8;E.8;O:2;B.8;R.4;
-O:2;G.4;____B.4;____G.4;____B.4;________G.4;____B.4;____G.4;________B.4;
+O:3;C#8;C#8;C#8;R_8;C_8;C_8;C_8;R_8;O:2;B_8;O:3;E_8;C_8;E_8;O:2;B_8;R_4;
+O:2;G_4;....B_4;....G_4;....B_4;........G_4;....B_4;....G_4;........B_4;
 		</textarea>
 	</div>
 	</div>

@@ -7,6 +7,14 @@ class Music_Pitch
 		this.noteLetter = noteLetter;
 	}
 
+	static fromOctaveAndNoteLetter(octave, noteLetter)
+	{
+		return new Music_Pitch
+		(
+			octave, noteLetter
+		);
+	}
+
 	frequencyInCyclesPerSecond()
 	{
 		var returnValue = 

@@ -26,6 +26,9 @@ class Music_Octave_Instances
 {
 	constructor()
 	{
+		// hack
+		// In a standard tuning, these frequencies
+		// are actually assigned to A's, not C's.
 		this.Octave0 = new Music_Octave(0, 55);
 		this.Octave1 = new Music_Octave(1, 110);
 		this.Octave2 = new Music_Octave(2, 220);
@@ -46,6 +49,11 @@ class Music_Octave_Instances
 
 	byIndex(index)
 	{
-		return this._All[index];
+		var returnValue = this._All[index];
+		if (returnValue == null)
+		{
+			throw new Error("Invalid octave index: " + index + ".");
+		}
+		return returnValue;
 	}
 }
