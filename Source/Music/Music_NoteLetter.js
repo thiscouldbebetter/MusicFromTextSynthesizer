@@ -48,10 +48,6 @@ class Music_NoteLetter_Instances
 	{
 		var octavesPerTone = Music_NoteLetter.OctavesPerTone;
 
-		// todo
-		this.Octave = new Music_NoteLetter("O:", 0, true);
-		this.Volume = new Music_NoteLetter("V:", 0, true);
-
 		this.Rest = new Music_NoteLetter("R.", 0, false);
 
 		this.C_ = new Music_NoteLetter("C.", Math.pow(2, 0 * octavesPerTone), false);
@@ -69,9 +65,6 @@ class Music_NoteLetter_Instances
 
 		this._All = 
 		[
-			this.Octave,
-			this.Volume,
-
 			this.Rest,
 
 			this.A_, 

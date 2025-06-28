@@ -1,17 +1,23 @@
 
 class Music_Note
 {
-	constructor(pitches, volume, duration)
+	constructor(pitches, volume, durationInQuarterNotes)
 	{
 		this.pitches = pitches;
 		this.volume = volume;
-		this.duration = duration;
+		this.durationInQuarterNotes = durationInQuarterNotes;
 	}
 
 	static parseFromString(volume, octave, noteAsString)
 	{
 		var noteLetterAsString = noteAsString.substring(0, 2);
-		var durationAsString = noteAsString.substring(2);
+		var durationAsDenominatorAsString = noteAsString.substring(2);
+		var durationAsDenominator =
+			parseInt(durationAsDenominatorAsString);
+
+		var durationInQuarterNotes =
+			4 /
+			durationAsDenominator;
 
 		var noteLetter = Music_NoteLetter.parseFromString
 		(
@@ -24,21 +30,41 @@ class Music_Note
 			noteLetter
 		);
 
-		var duration = parseFloat(durationAsString);
-
 		var returnValue = new Music_Note
 		(
 			[ pitch ],
 			volume,
-			duration
+			durationInQuarterNotes
 		);
 
 		if (returnValue.valid() == false)
 		{
-			throw new Error("Error attempting to parse note from string: '" + noteAsString + "'.");
+			var errorMessage =
+				"Error attempting to parse note from string: '"
+				+ noteAsString + "'.";
+			throw new Error(errorMessage);
 		}
 
 		return returnValue;
+	}
+
+	durationInSecondsForMovement(movement)
+	{
+		var durationInTicks =
+			this.durationInTicksForMovement(movement);
+		var ticksPerSecond = movement.ticksPerSecond;
+		var durationInSeconds =
+			durationInTicks / ticksPerSecond;
+		return durationInSeconds;
+	}
+
+	durationInTicksForMovement(movement)
+	{
+		var ticksPerQuarterNote =
+			movement.ticksPerQuarterNote();
+		var durationInTicks =
+			this.durationInQuarterNotes * ticksPerQuarterNote;
+		return durationInTicks;
 	}
 
 	valid()
@@ -47,7 +73,7 @@ class Music_Note
 			this.pitches != null
 			&& this.pitches.some(x => x.valid() == false) == false
 			&& this.volume != null
-			&& this.duration != null;
+			&& this.durationInQuarterNotes != null;
 
 		return isValid;
 	}

@@ -15,6 +15,14 @@ class Music_Tempo
 		}
 		return this._instances;
 	}
+
+	secondsPerBeat()
+	{
+		var secondsPerMinute = 60;
+		var returnValue =
+			secondsPerMinute / this.beatsPerMinute;
+		return returnValue;
+	}
 }
 
 class Music_Tempo_Instances

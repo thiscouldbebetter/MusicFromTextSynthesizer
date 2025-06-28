@@ -1,10 +1,10 @@
 
 class Music_TimeSignature
 {
-	constructor(beatsPerMeasure, durationForBeat)
+	constructor(beatsPerMeasure, beatsPerWholeNote)
 	{
 		this.beatsPerMeasure = beatsPerMeasure;
-		this.durationForBeat = durationForBeat;
+		this.beatsPerWholeNote = beatsPerWholeNote;
 	}
 
 	static Instances()
@@ -16,6 +16,11 @@ class Music_TimeSignature
 		return this._instances;
 	}
 
+	beatsPerQuarterNote()
+	{
+		var quarterNotesPerWholeNote = 4;
+		return this.beatsPerWholeNote / quarterNotesPerWholeNote;
+	}
 }
 
 class Music_TimeSignature_Instances

@@ -7,6 +7,8 @@ class Music_Movement
 		this.timeSignature = timeSignature;
 		this.tempo = tempo;
 		this.parts = parts;
+
+		this.ticksPerSecond = 8; // hack
 	}
 
 	static fromString(stringToParse)
@@ -42,16 +44,39 @@ class Music_Movement
 			}
 		}
 
-		var parts = partsAsStrings.map(x => Music_Part.fromString(x) );
+		// hack - These should be configurable.
+		var movementName = "[movement from string]";
+		var timeSignature = Music_TimeSignature.Instances().FourFour;
+		var tempo = Music_Tempo.Instances().Default;
 
 		var returnMovement = new Music_Movement
 		(
-			"[movement from string]",
-			Music_TimeSignature.Instances().FourFour,
-			Music_Tempo.Instances().Default,
-			parts
+			movementName,
+			timeSignature,
+			tempo,
+			[] // parts
 		);
 
+		var partsParsed = partsAsStrings.map
+		(
+			x => Music_Part.fromString(x)
+		);
+
+		returnMovement.parts.push(...partsParsed);
+
+
 		return returnMovement;
+	}
+
+	ticksPerQuarterNote()
+	{
+		var beatsPerQuarterNote =
+			this.timeSignature.beatsPerQuarterNote();
+		var secondsPerBeat =
+			this.tempo.secondsPerBeat();
+		var ticksPerBeat = this.ticksPerSecond * secondsPerBeat;
+		var ticksPerQuarterNote =
+			ticksPerBeat * beatsPerQuarterNote;
+		return ticksPerQuarterNote;
 	}
 }

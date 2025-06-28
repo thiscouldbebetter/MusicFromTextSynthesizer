@@ -32,27 +32,40 @@ class MusicToWavFileConverter
 
 				for (var n = 0; n < numberOfNotes; n++)
 				{
-					var note = part.notes[n];
-					var notePitch = note.pitches[0];
-
-					if (notePitch.noteLetter.isControlCode == false)
+					var noteOrDynamic = part.notes[n];
+					var noteOrDynamicTypeName = noteOrDynamic.constructor.name;
+					if (noteOrDynamicTypeName == Music_Dynamic.name)
 					{
-						var noteDurationInSeconds = 
-							movement.timeSignature.durationForBeat
-							/ note.duration
-							* secondsPerBeat;
+						var dynamic = noteOrDynamic;
+						// todo
+					}
+					else if (noteOrDynamicTypeName == Music_Note.name)
+					{
+						var note = noteOrDynamic;
+
+						var notePitch = note.pitches[0];
+
+						var noteDurationInSeconds =
+							note.durationInSecondsForMovement(movement);
+
+						var frequencyInCyclesPerSecond =
+							notePitch.frequencyInCyclesPerSecond();
 
 						this.addVoiceToWavFileSamples
 						(
 							returnValue, 
 							voice, 
 							note.volume,
-							notePitch.frequencyInCyclesPerSecond(),
+							frequencyInCyclesPerSecond,
 							timeOffsetInSecondsCurrent,
 							noteDurationInSeconds
 						);
 
 						timeOffsetInSecondsCurrent += noteDurationInSeconds;
+					}
+					else
+					{
+						throw new Error("Neither a note nor a dynamic!");
 					}
 				}
 			}

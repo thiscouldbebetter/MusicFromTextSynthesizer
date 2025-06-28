@@ -15,6 +15,11 @@ class Music_Volume
 		}
 		return this._instances;
 	}
+
+	static byIndex(index)
+	{
+		return this.Instances().byIndex(index);
+	}
 }
 
 class Music_Volume_Instances
