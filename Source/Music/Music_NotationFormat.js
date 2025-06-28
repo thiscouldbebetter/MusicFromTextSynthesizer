@@ -54,7 +54,9 @@ class Music_NotationFormat_Instances
 
 	// Parsers.
 
-	songParse_A(name, stringToParse)
+	// Shared.
+
+	songParse_AB(name, stringToParse, movementParse)
 	{
 		var newline = "\n";
 		var commentMarker = "//";
@@ -79,13 +81,13 @@ class Music_NotationFormat_Instances
 		var movementsAsStrings = stringToParse.split(twoBlankLines);
 		var movements = movementsAsStrings.map
 		(
-			x => this.songParse_A_Movement(x)
+			x => movementParse(x)
 		);
 		var song = new Music_Song(name, movements);
 		return song;
 	}
 
-	songParse_A_Movement(stringToParse)
+	songParse_AB_Movement(stringToParse, partParse)
 	{
 		var newline = "\n";
 		var blankLine = newline + newline;
@@ -133,12 +135,28 @@ class Music_NotationFormat_Instances
 
 		var partsParsed = partsAsStrings.map
 		(
-			x => this.songParse_A_Movement_Part(x)
+			x => partParse(x)
 		);
 
 		returnMovement.parts.push(...partsParsed);
 
 		return returnMovement;
+	}
+
+	// A.
+
+	songParse_A(name, stringToParse)
+	{
+		var movementParse =
+			(x) => this.songParse_A_Movement(x);
+		return this.songParse_AB(name, stringToParse, movementParse);
+	}
+
+	songParse_A_Movement(stringToParse)
+	{
+		var partParse =
+			(x) => this.songParse_A_Movement_Part(x);
+		return this.songParse_AB_Movement(stringToParse, partParse);
 	}
 
 	songParse_A_Movement_Part(partAsString)
