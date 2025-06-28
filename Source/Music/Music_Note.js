@@ -8,46 +8,6 @@ class Music_Note
 		this.durationInQuarterNotes = durationInQuarterNotes;
 	}
 
-	static parseFromString(volume, octave, noteAsString)
-	{
-		var noteLetterAsString = noteAsString.substring(0, 2);
-		var durationAsDenominatorAsString = noteAsString.substring(2);
-		var durationAsDenominator =
-			parseInt(durationAsDenominatorAsString);
-
-		var durationInQuarterNotes =
-			4 /
-			durationAsDenominator;
-
-		var noteLetter = Music_NoteLetter.parseFromString
-		(
-			noteLetterAsString
-		);
-
-		var pitch = new Music_Pitch
-		(
-			octave,
-			noteLetter
-		);
-
-		var returnValue = new Music_Note
-		(
-			[ pitch ],
-			volume,
-			durationInQuarterNotes
-		);
-
-		if (returnValue.valid() == false)
-		{
-			var errorMessage =
-				"Error attempting to parse note from string: '"
-				+ noteAsString + "'.";
-			throw new Error(errorMessage);
-		}
-
-		return returnValue;
-	}
-
 	durationInSecondsForMovement(movement)
 	{
 		var durationInTicks =

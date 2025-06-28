@@ -17,24 +17,44 @@ class UiEventHandler
 	{
 		var d = document;
 
+		var selectNotationFormat =
+			d.getElementById("selectNotationFormat");
+		var notationFormatName =
+			selectNotationFormat.value;
+
 		var songName = "DanceOfTheSugarPlumFairies";
 
-		var songContentAsStrings =
-		[
-			"// \"Dance of the Sugar-Plum Fairies\",",
-			"// from _The Nutcracker_,",
-			"// by P.I. Tchaikovsky",
-			"",
-			"O:3;R.1;____________R.4;G.8;E.8;G.4;F#4;D#4;____E.4;D.8;D.8;____D.8;R.8;",
-			"O:2;G.4;B.4;G.4;B.4;G.4;B.4;____G.4;B.4;G.4;____B.4;G.4;________B.4;____",
-			"",
-			"O:3;C#8;C#8;C#8;R.8;C.8;C.8;C.8;R.8;O:2;B.8;O:3;E.8;C.8;E.8;O:2;B.8;R.4;",
-			"O:2;G.4;____B.4;____G.4;____B.4;________G.4;____B.4;____G.4;________B.4;",
-		];
+		var songContentAsLines;
+		if (notationFormatName == "A")
+		{
+			songContentAsLines =
+			[
+				"// \"Dance of the Sugar-Plum Fairies\",",
+				"// from _The Nutcracker_,",
+				"// by P.I. Tchaikovsky",
+				"",
+				"O:3;R.1;____________R.4;G.8;E.8;G.4;F#4;D#4;____E.4;D.8;D.8;____D.8;R.8;",
+				"O:2;G.4;B.4;G.4;B.4;G.4;B.4;____G.4;B.4;G.4;____B.4;G.4;________B.4;____",
+				"",
+				"O:3;C#8;C#8;C#8;R.8;C.8;C.8;C.8;R.8;O:2;B.8;O:3;E.8;C.8;E.8;O:2;B.8;R.4;",
+				"O:2;G.4;____B.4;____G.4;____B.4;________G.4;____B.4;____G.4;________B.4;",
+			];
+		}
+		else if (notationFormatName == "B")
+		{
+			songContentAsLines =
+			[
+				"C D E F G A B C B A G F E D C"
+			];
+		}
+		else
+		{
+			throw new Error("Unrecognized notation format!");
+		}
 
 		var newline = "\n";
 		var songContentAsString =
-			songContentAsStrings.join(newline);
+			songContentAsLines.join(newline);
 
 		var inputSongName = d.getElementById("inputSongName");
 		inputSongName.value = songName;
@@ -101,7 +121,14 @@ class UiEventHandler
 			d.getElementById("textareaSongAsStrings");
 		var songAsString = textareaSongAsStrings.value;
 
-		var songToSynthesize = Music_Song.fromNameAndString
+		var selectNotationFormat =
+			d.getElementById("selectNotationFormat");
+		var notationFormatName =
+			selectNotationFormat.value;
+		var notationFormat =
+			Music_NotationFormat.byName(notationFormatName);
+
+		var songToSynthesize = notationFormat.songParseFromNameAndString
 		(
 			songName,
 			songAsString

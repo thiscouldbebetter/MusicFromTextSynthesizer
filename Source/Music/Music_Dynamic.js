@@ -22,16 +22,6 @@ class Music_Dynamic
 		return this.Instances().byCode(code);
 	}
 
-	static parseFromString(stringToParse)
-	{
-		var codeAndValue = stringToParse.split(":");
-		var code = codeAndValue[0];
-		var dynamicForCode = this.byCode(code);
-		var value = codeAndValue[1];
-		var returnDynamic = dynamicForCode.clone().valueSet(value);
-		return returnDynamic;
-	}
-
 	applyToPart(part)
 	{
 		this._applyToPart(part);

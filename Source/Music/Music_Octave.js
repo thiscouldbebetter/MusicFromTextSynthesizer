@@ -32,13 +32,15 @@ class Music_Octave_Instances
 		this.Octave3 = new Music_Octave(3, 440);
 		this.Octave4 = new Music_Octave(4, 880);
 
+		this.Default = this.Octave3;
+
 		this._All = 
 		[
 			this.Octave0,
 			this.Octave1,
 			this.Octave2,
 			this.Octave3,
-			this.Octave4,
+			this.Octave4
 		];
 	}
 
