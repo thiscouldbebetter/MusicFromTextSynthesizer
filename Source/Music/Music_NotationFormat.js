@@ -58,7 +58,13 @@ class Music_NotationFormat_Instances
 
 	// Shared.
 
-	songParse_AB(name, stringToParse, movementParse)
+	songParse_AB
+	(
+		name,
+		stringToParse,
+		movementDelimiter,
+		movementParse
+	)
 	{
 		var newline = "\n";
 		var commentMarker = "//";
@@ -74,30 +80,39 @@ class Music_NotationFormat_Instances
 		{
 			stringToParse = stringToParse.substring(1);
 		}
+
 		while (stringToParse.endsWith(newline) )
 		{
-			stringToParse = stringToParse.substring(0, stringToParse.length - 1);
+			stringToParse =
+				stringToParse.substring(0, stringToParse.length - 1);
 		}
 
-		var twoBlankLines = newline + newline + newline;
-		var movementsAsStrings = stringToParse.split(twoBlankLines);
+		var movementsAsStrings =
+			stringToParse.split(movementDelimiter);
+
 		var movements = movementsAsStrings.map
 		(
 			x => movementParse(x)
 		);
+
 		var song = new Music_Song(name, movements);
+
 		return song;
 	}
 
-	songParse_AB_Movement(stringToParse, partParse)
+	songParse_AB_Movement
+	(
+		stringToParse,
+		multipartPassageDelimiter,
+		partParse
+	)
 	{
-		var newline = "\n";
-		var blankLine = newline + newline;
 		var multipartPassagesAsStrings =
-			stringToParse.split(blankLine);
+			stringToParse.split(multipartPassageDelimiter);
 
 		var passagesCount = multipartPassagesAsStrings.length;
 
+		var newline = "\n";
 		var partGroupsForPassagesAsStringArrays =
 			multipartPassagesAsStrings.map(x => x.split(newline) );
 
@@ -159,16 +174,33 @@ class Music_NotationFormat_Instances
 
 	songParse_A(name, stringToParse)
 	{
+		var newline = "\n";
+		var twoBlankLines = newline + newline + newline;
+		var movementDelimiter = twoBlankLines;
+
 		var movementParse =
 			(x) => this.songParse_A_Movement(x);
-		return this.songParse_AB(name, stringToParse, movementParse);
+		return this.songParse_AB
+		(
+			name,
+			stringToParse,
+			movementDelimiter,
+			movementParse
+		);
 	}
 
 	songParse_A_Movement(stringToParse)
 	{
+		var newline = "\n";
+		var blankLine = newline + newline;
+		var multipartPassageDelimiter = blankLine;
+
 		var partParse =
 			(x) => this.songParse_A_Movement_Part(x);
-		return this.songParse_AB_Movement(stringToParse, partParse);
+		return this.songParse_AB_Movement
+		(
+			stringToParse, multipartPassageDelimiter, partParse
+		);
 	}
 
 	songParse_A_Movement_Part(partAsString)
@@ -298,16 +330,32 @@ class Music_NotationFormat_Instances
 
 	songParse_B(name, stringToParse)
 	{
+		var newline = "\n";
+		var twoBlankLines = newline + newline + newline;
+		var movementDelimiter = twoBlankLines;
 		var movementParse =
 			(x) => this.songParse_B_Movement(x);
-		return this.songParse_AB(name, stringToParse, movementParse);
+		return this.songParse_AB
+		(
+			name, stringToParse, movementDelimiter, movementParse
+		);
 	}
 
 	songParse_B_Movement(stringToParse)
 	{
+		var newline = "\n";
+		var blankLine = newline + newline;
+		var multipartPassageDelimiter = blankLine;
+
 		var partParse =
 			(x) => this.songParse_B_Movement_Part(x);
-		return this.songParse_AB_Movement(stringToParse, partParse);
+
+		return this.songParse_AB_Movement
+		(
+			stringToParse,
+			multipartPassageDelimiter,
+			partParse
+		);
 	}
 
 	songParse_B_Movement_Part(stringToParse)
