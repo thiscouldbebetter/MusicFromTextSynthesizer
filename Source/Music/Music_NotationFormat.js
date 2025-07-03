@@ -104,6 +104,7 @@ class Music_NotationFormat_Instances
 	(
 		stringToParse,
 		multipartPassageDelimiter,
+		partDelimiterWithinMultipartPassage,
 		partParse
 	)
 	{
@@ -112,9 +113,9 @@ class Music_NotationFormat_Instances
 
 		var passagesCount = multipartPassagesAsStrings.length;
 
-		var newline = "\n";
 		var partGroupsForPassagesAsStringArrays =
-			multipartPassagesAsStrings.map(x => x.split(newline) );
+			multipartPassagesAsStrings
+				.map(x => x.split(partDelimiterWithinMultipartPassage) );
 
 		var partsForPassage0AsStrings =
 			partGroupsForPassagesAsStringArrays[0];
@@ -180,6 +181,7 @@ class Music_NotationFormat_Instances
 
 		var movementParse =
 			(x) => this.songParse_A_Movement(x);
+
 		return this.songParse_AB
 		(
 			name,
@@ -195,11 +197,17 @@ class Music_NotationFormat_Instances
 		var blankLine = newline + newline;
 		var multipartPassageDelimiter = blankLine;
 
+		var partDelimiterWithinMultipartPassage = newline;
+
 		var partParse =
 			(x) => this.songParse_A_Movement_Part(x);
+
 		return this.songParse_AB_Movement
 		(
-			stringToParse, multipartPassageDelimiter, partParse
+			stringToParse,
+			multipartPassageDelimiter,
+			partDelimiterWithinMultipartPassage,
+			partParse
 		);
 	}
 
@@ -331,8 +339,9 @@ class Music_NotationFormat_Instances
 	songParse_B(name, stringToParse)
 	{
 		var newline = "\n";
-		var twoBlankLines = newline + newline + newline;
-		var movementDelimiter = twoBlankLines;
+		var threeBlankLines =
+			newline + newline + newline + newline;
+		var movementDelimiter = threeBlankLines;
 		var movementParse =
 			(x) => this.songParse_B_Movement(x);
 		return this.songParse_AB
@@ -345,7 +354,9 @@ class Music_NotationFormat_Instances
 	{
 		var newline = "\n";
 		var blankLine = newline + newline;
-		var multipartPassageDelimiter = blankLine;
+		var twoBlankLines = blankLine + newline;
+		var multipartPassageDelimiter = twoBlankLines;
+		var partDelimiterWithinMultipartPassage = blankLine;
 
 		var partParse =
 			(x) => this.songParse_B_Movement_Part(x);
@@ -354,6 +365,7 @@ class Music_NotationFormat_Instances
 		(
 			stringToParse,
 			multipartPassageDelimiter,
+			partDelimiterWithinMultipartPassage,
 			partParse
 		);
 	}
