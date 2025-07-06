@@ -61,7 +61,7 @@ class Music_NotationFormat_Instances
 	songParse_AB
 	(
 		name,
-		stringToParse,
+		songAsString,
 		movementDelimiter,
 		movementParse
 	)
@@ -69,27 +69,30 @@ class Music_NotationFormat_Instances
 		var newline = "\n";
 		var commentMarker = "//";
 
-		stringToParse = stringToParse.trimEnd();
+		songAsString = songAsString.trimEnd();
 
-		stringToParse =
-			stringToParse
+		songAsString =
+			songAsString
 				.split(newline)
 				.filter(x => x.startsWith(commentMarker) == false)
 				.join(newline);
 
-		while (stringToParse.startsWith(newline) )
+		songAsString =
+			songAsString.split("|").join("");
+
+		while (songAsString.startsWith(newline) )
 		{
-			stringToParse = stringToParse.substring(1);
+			songAsString = songAsString.substring(1);
 		}
 
-		while (stringToParse.endsWith(newline) )
+		while (songAsString.endsWith(newline) )
 		{
-			stringToParse =
-				stringToParse.substring(0, stringToParse.length - 1);
+			songAsString =
+				songAsString.substring(0, songAsString.length - 1);
 		}
 
 		var movementsAsStrings =
-			stringToParse.split(movementDelimiter);
+			songAsString.split(movementDelimiter);
 
 		var movements = movementsAsStrings.map
 		(
@@ -103,7 +106,7 @@ class Music_NotationFormat_Instances
 
 	songParse_AB_Movement
 	(
-		stringToParse,
+		movementAsString,
 		multipartPassageDelimiter,
 		partDelimiterWithinMultipartPassage,
 		trackDelimiterWithinPart,
@@ -111,7 +114,7 @@ class Music_NotationFormat_Instances
 	)
 	{
 		var multipartPassagesAsStrings =
-			stringToParse.split(multipartPassageDelimiter);
+			movementAsString.split(multipartPassageDelimiter);
 
 		var passage0 = multipartPassagesAsStrings[0];
 		var passage0Parts =

@@ -1,0 +1,8 @@
+// "Fuer Elise", by Ludwig von Beethoven
+
+    |      O-O+  |O-          |            |O+    O-O+  |//
+E_D#|E_D#E_B_D_C_|A___..C_E_A_|B___..E_G#B_|C___..E_E_D#|//
+
+
+    |      O-O+  |O-          |        O+O-|            |//
+    |E_D#E_B_D_C_|A___..C_E_A_|B___..E_C_B_|A_______....|//
