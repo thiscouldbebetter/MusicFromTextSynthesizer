@@ -1,3 +1,4 @@
+
 class MusicToWavFileConverter
 {
 	static convertSongToWavFile(songToConvert, samplingInfo)
@@ -43,23 +44,27 @@ class MusicToWavFileConverter
 					{
 						var note = noteOrDynamic;
 
-						var notePitch = note.pitches[0];
-
 						var noteDurationInSeconds =
 							note.durationInSecondsForMovement(movement);
 
-						var frequencyInCyclesPerSecond =
-							notePitch.frequencyInCyclesPerSecond();
+						var notePitches = note.pitches;
+						for (var j = 0; j < notePitches.length; j++)
+						{
+							var notePitch = notePitches[j];
 
-						this.addVoiceToWavFileSamples
-						(
-							returnValue, 
-							voice, 
-							note.volume,
-							frequencyInCyclesPerSecond,
-							timeOffsetInSecondsCurrent,
-							noteDurationInSeconds
-						);
+							var frequencyInCyclesPerSecond =
+								notePitch.frequencyInCyclesPerSecond();
+
+							this.addVoiceToWavFileSamples
+							(
+								returnValue, 
+								voice, 
+								note.volume,
+								frequencyInCyclesPerSecond,
+								timeOffsetInSecondsCurrent,
+								noteDurationInSeconds
+							);
+						}
 
 						timeOffsetInSecondsCurrent += noteDurationInSeconds;
 					}

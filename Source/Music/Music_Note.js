@@ -30,6 +30,21 @@ class Music_Note
 		);
 	}
 
+	static fromVolume(volume)
+	{
+		return new Music_Note([], volume, 0);
+	}
+
+	static restFromDurationInQuarterNotes(durationInQuarterNotes)
+	{
+		return Music_Note.fromPitchesVolumeAndDurationInQuarterNotes
+		(
+			[], // pitches
+			Music_Volume.Instances().Silence,
+			durationInQuarterNotes
+		);
+	}
+
 	durationInSecondsForMovement(movement)
 	{
 		var durationInTicks =

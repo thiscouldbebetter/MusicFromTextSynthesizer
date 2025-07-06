@@ -69,11 +69,12 @@ class Music_NotationFormat_Instances
 		var newline = "\n";
 		var commentMarker = "//";
 
+		stringToParse = stringToParse.trimEnd();
+
 		stringToParse =
 			stringToParse
 				.split(newline)
 				.filter(x => x.startsWith(commentMarker) == false)
-				.map(x => x.trim() )
 				.join(newline);
 
 		while (stringToParse.startsWith(newline) )
@@ -105,36 +106,68 @@ class Music_NotationFormat_Instances
 		stringToParse,
 		multipartPassageDelimiter,
 		partDelimiterWithinMultipartPassage,
-		partParse
+		trackDelimiterWithinPart,
+		partParseFromStrings
 	)
 	{
 		var multipartPassagesAsStrings =
 			stringToParse.split(multipartPassageDelimiter);
 
-		var passagesCount = multipartPassagesAsStrings.length;
+		var passage0 = multipartPassagesAsStrings[0];
+		var passage0Parts =
+			passage0.split(partDelimiterWithinMultipartPassage);
+		var partCount = passage0Parts.length;
+		var passage0Part0 = passage0Parts[0];
+		var passage0Part0Tracks =
+			passage0Part0.split(trackDelimiterWithinPart);
+		var tracksPerPart = passage0Part0Tracks.length;
 
-		var partGroupsForPassagesAsStringArrays =
-			multipartPassagesAsStrings
-				.map(x => x.split(partDelimiterWithinMultipartPassage) );
+		var tracksForPartsAsStringArrays = [];
 
-		var partsForPassage0AsStrings =
-			partGroupsForPassagesAsStringArrays[0];
-
-		var partsCount = partsForPassage0AsStrings.length;
-
-		var partsAsStrings = partsForPassage0AsStrings;
-
-		for (var i = 1; i < passagesCount; i++)
+		for (var i = 0; i < partCount; i++)
 		{
-			var partsForPassageAsStrings =
-				partGroupsForPassagesAsStringArrays[i];
+			var tracksForPartAsStrings = [];
 
-			for (var j = 0; j < partsForPassageAsStrings.length; j++)
+			for (var j = 0; j < tracksPerPart; j++)
 			{
-				var partForPassageAsString =
-					partsForPassageAsStrings[j];
+				var trackAsString = "";
+				tracksForPartAsStrings.push(trackAsString);
+			}
 
-				partsAsStrings[j] += partForPassageAsString;
+			tracksForPartsAsStringArrays
+				.push(tracksForPartAsStrings);
+		}
+
+		for (var i = 0; i < multipartPassagesAsStrings.length; i++)
+		{
+			var multipartPassageAsString = 
+				multipartPassagesAsStrings[i];
+
+			var partsInPassageAsStrings =
+				multipartPassageAsString
+					.split(partDelimiterWithinMultipartPassage);
+
+			for (var j = 0; j < partsInPassageAsStrings.length; j++)
+			{
+				var partInPassageAsString =
+					partsInPassageAsStrings[j];
+
+				var tracksInPartInPassageAsStrings =
+					partInPassageAsString
+						.split(trackDelimiterWithinPart)
+						.map(x => x.split("//")[0] );
+
+				var tracksForPartAsStrings =
+					tracksForPartsAsStringArrays[j];
+
+				for (var k = 0; k < tracksInPartInPassageAsStrings.length; k++)
+				{
+					var trackInPartInPassageAsString =
+						tracksInPartInPassageAsStrings[k];
+
+					tracksForPartAsStrings[k] +=
+						trackInPartInPassageAsString;
+				}
 			}
 		}
 
@@ -151,9 +184,10 @@ class Music_NotationFormat_Instances
 			[] // parts
 		);
 
-		var partsParsed = partsAsStrings.map
+		var partsParsed = tracksForPartsAsStringArrays.map
 		(
-			x => partParse(x)
+			tracksForPartAsStrings =>
+				partParseFromStrings(tracksForPartAsStrings)
 		);
 
 		returnMovement.parts.push(...partsParsed);
@@ -161,9 +195,13 @@ class Music_NotationFormat_Instances
 		return returnMovement;
 	}
 
-	songParse_AB_Movement_Part_Dynamic(stringToParse)
+	songParse_AB_Movement_Part_Dynamic
+	(
+		stringToParse, delimiterOfCodeAndValue
+	)
 	{
-		var codeAndValue = stringToParse.split(":");
+		var codeAndValue =
+			stringToParse.split(delimiterOfCodeAndValue);
 		var code = codeAndValue[0];
 		var dynamicForCode = Music_Dynamic.byCode(code);
 		var value = codeAndValue[1];
@@ -198,8 +236,9 @@ class Music_NotationFormat_Instances
 		var multipartPassageDelimiter = blankLine;
 
 		var partDelimiterWithinMultipartPassage = newline;
+		var trackDelimiterWithinPart = newline; // Intentionally same.
 
-		var partParse =
+		var partParseFromStrings =
 			(x) => this.songParse_A_Movement_Part(x);
 
 		return this.songParse_AB_Movement
@@ -207,12 +246,15 @@ class Music_NotationFormat_Instances
 			stringToParse,
 			multipartPassageDelimiter,
 			partDelimiterWithinMultipartPassage,
-			partParse
+			trackDelimiterWithinPart,
+			partParseFromStrings
 		);
 	}
 
-	songParse_A_Movement_Part(partAsString)
+	songParse_A_Movement_Part(partAsStrings)
 	{
+		var partAsString = partAsStrings[0];
+
 		var octaves = Music_Octave.Instances();
 		var volumes = Music_Volume.Instances();
 		var noteLetters = Music_NoteLetter.Instances();
@@ -228,11 +270,13 @@ class Music_NotationFormat_Instances
 			notesOrDynamics
 		);
 
-		partAsString = partAsString.split(" ").join("");
-		partAsString = partAsString.split("-").join("");
-		partAsString = partAsString.split(".").join("");
-		partAsString = partAsString.split("\t").join("");
-		partAsString = partAsString.split("|").join("");
+		partAsString =
+			partAsString
+				.split(" ").join("")
+				.split("-").join("")
+				.split(".").join("")
+				.split("\t").join("")
+				.split("|").join("");
 
 		var notesOrDynamicsAsStrings =
 			partAsString.split(";").filter(x => x.trim() != "");
@@ -250,7 +294,10 @@ class Music_NotationFormat_Instances
 			{
 				var dynamicAsString = noteOrDynamicAsString;
 				var dynamic =
-					this.songParse_A_Movement_Part_Dynamic(dynamicAsString);
+					this.songParse_A_Movement_Part_Dynamic
+					(
+						dynamicAsString
+					);
 				notesOrDynamics[n] = dynamic;
 				dynamic.applyToPart(part);
 			}
@@ -288,7 +335,11 @@ class Music_NotationFormat_Instances
 
 	songParse_A_Movement_Part_Dynamic(stringToParse)
 	{
-		return this.songParse_AB_Movement_Part_Dynamic(stringToParse)
+		return this.songParse_AB_Movement_Part_Dynamic
+		(
+			stringToParse,
+			":" // delimiterOfCodeAndValue
+		)
 	}
 
 	songParse_A_Movement_Part_Note
@@ -357,8 +408,9 @@ class Music_NotationFormat_Instances
 		var twoBlankLines = blankLine + newline;
 		var multipartPassageDelimiter = twoBlankLines;
 		var partDelimiterWithinMultipartPassage = blankLine;
+		var trackDelimiterWithinPart = newline;
 
-		var partParse =
+		var partParseFromStrings =
 			(x) => this.songParse_B_Movement_Part(x);
 
 		return this.songParse_AB_Movement
@@ -366,13 +418,102 @@ class Music_NotationFormat_Instances
 			stringToParse,
 			multipartPassageDelimiter,
 			partDelimiterWithinMultipartPassage,
-			partParse
+			trackDelimiterWithinPart,
+			partParseFromStrings
 		);
 	}
 
-	songParse_B_Movement_Part(stringToParse)
+	songParse_B_Movement_Part(partTracksAsStrings)
 	{
-		stringToParse = stringToParse.split(".").join(" ");
+		var track0AsString = partTracksAsStrings[0];
+		var partLengthInChars = track0AsString.length;
+
+		// todo - Pad strings to the same length.
+
+		var charsPerQuarterNote = 4; // hack
+
+		var tokensSoFar = [];
+		var tokensInProgressForTracks = [];
+
+		var trackCount = partTracksAsStrings.length;
+
+		for (var i = 0; i < trackCount; i++)
+		{
+			tokensInProgressForTracks[i] = "";
+		}
+
+		for (var i = 0; i < partLengthInChars; i++)
+		{
+			for (var j = 0; j < trackCount; j++)
+			{
+				var trackAsString = partTracksAsStrings[j];
+				var tokenInProgress = tokensInProgressForTracks[j];
+
+				var charCurrent = trackAsString[i];
+
+				if (charCurrent == " ")
+				{
+					// Do nothing, and don't count the time.
+					if (tokenInProgress != "")
+					{
+						tokensSoFar.push(tokenInProgress);
+						tokenInProgress = "";
+					}
+				}
+				else if (charCurrent == ".")
+				{
+					// Rest.
+					var tokenInProgressIsNotRest =
+						(tokenInProgress.split(".").join("").length > 0);
+					if (tokenInProgressIsNotRest)
+					{
+						tokensSoFar.push(tokenInProgress);
+						tokenInProgress = "";
+					}
+					tokenInProgress += charCurrent;
+				}
+				else if (charCurrent >= "A" && charCurrent <= "G")
+				{
+					// Start of note.
+					tokensSoFar.push(tokenInProgress);
+					tokenInProgress = charCurrent;
+				}
+				else if
+				(
+					// Continuation of note.
+					charCurrent == "_"
+					|| charCurrent == "#"
+					|| charCurrent == "_"
+				)
+				{
+					tokenInProgress += charCurrent;
+				}
+				else if (charCurrent == "V" || charCurrent == "O")
+				{
+					// Start of volume or octave change.
+					tokensSoFar.push(tokenInProgress);
+					tokenInProgress = charCurrent;
+				}
+				else if
+				(
+					// End of volume or octave change.
+					isNaN(parseInt(charCurrent) ) == false
+					|| charCurrent == "+"
+					|| charCurrent == "-"
+				)
+				{
+					tokenInProgress += charCurrent;
+				}
+				else
+				{
+					throw new Error("Unexpected character: " + charCurrent);
+				}
+
+				tokensInProgressForTracks[j] = tokenInProgress;
+			}
+		}
+
+		tokensSoFar.push(...tokensInProgressForTracks);
 
 		var octaves = Music_Octave.Instances();
 		var volumes = Music_Volume.Instances();
@@ -389,15 +530,48 @@ class Music_NotationFormat_Instances
 			notesOrDynamics
 		);
 
+		tokensSoFar =
+			tokensSoFar.filter(x => x.length > 0);
+
+		var tokensAsNotes =
+			tokensSoFar.map
+			(
+				x =>
+					this.songParse_B_Movement_Part_NoteOrDynamic
+					(
+						x,
+						part,
+						notesOrDynamics
+					)
+			);
+
+		return part;
+	}
+
+	songParse_B_Movement_Part_NoteOrDynamic
+	(
+		noteOrDynamicAsString,
+		part,
+		notesOrDynamics
+	)
+	{
+		var noteOrDynamic;
+
+		var durationInChars = noteOrDynamicAsString.length;
 		var charsPerQuarterNote = 4; // hack
+		var durationInQuarterNotes =
+			durationInChars / charsPerQuarterNote;
 
-		var notesOrDynamicsAsStrings =
-			stringToParse.split(" ");
-		for (var nod = 0; nod < notesOrDynamicsAsStrings.length; nod++)
+		if (noteOrDynamicAsString.split(".").join("").length == 0)
 		{
-			var noteOrDynamicAsString =
-				notesOrDynamicsAsStrings[nod];
-
+			// Rest.
+			noteOrDynamic = Music_Note.restFromDurationInQuarterNotes
+			(
+				durationInQuarterNotes
+			);
+		}
+		else
+		{
 			var noteLetterSymbol =
 				noteOrDynamicAsString.substr(0, 2);
 
@@ -410,8 +584,11 @@ class Music_NotationFormat_Instances
 			{
 				var dynamicAsString = noteOrDynamicAsString;
 				var dynamic =
-					this.songParse_B_Movement_Part_Dynamic(dynamicAsString);
-				notesOrDynamics[nod] = dynamic;
+					this.songParse_B_Movement_Part_NoteOrDynamic_Dynamic
+					(
+						dynamicAsString
+					);
+				noteOrDynamic = dynamic;
 				dynamic.applyToPart(part);
 			}
 			else
@@ -424,9 +601,6 @@ class Music_NotationFormat_Instances
 				var volume = part.volumeCurrent;
 
 				var noteAsString = noteOrDynamicAsString;
-				var durationInChars = noteAsString.length;
-				var durationInQuarterNotes =
-					durationInChars / charsPerQuarterNote;
 
 				var note = Music_Note.fromPitchVolumeAndDurationInQuarterNotes
 				(
@@ -435,16 +609,19 @@ class Music_NotationFormat_Instances
 					durationInQuarterNotes
 				);
 
-				notesOrDynamics.push(note);
+				noteOrDynamic = note;
 			}
 		}
 
-		return part;
+		notesOrDynamics.push(noteOrDynamic);
 	}
 
-	songParse_B_Movement_Part_Dynamic(stringToParse)
+	songParse_B_Movement_Part_NoteOrDynamic_Dynamic(stringToParse)
 	{
-		return this.songParse_AB_Movement_Part_Dynamic(stringToParse)
+		return this.songParse_AB_Movement_Part_Dynamic
+		(
+			stringToParse, "" // delimiterOfCodeAndValue
+		)
 	}
 
 }

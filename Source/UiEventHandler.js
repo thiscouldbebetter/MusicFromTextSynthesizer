@@ -69,10 +69,12 @@ class UiEventHandler
 			songName = "Scale";
 			songContentAsLines =
 			[
-				"C_ D_ E_ F_ G_ A_ B_ O:+ C_ O:- B_ A_ G_ F_ E_ D_ C_",
+				"                     O+ O-                   ",
+				"C_.D_.E_.F_.G_.A_.B_.C_.B_.A_.G_.F_.E_.D_.C_.",
 				"",
 				"",
-				"C_ D_ E_ F_ G_ A_ B_ O:+ C_ O:- B_ A_ G_ F_ E_ D_ C_"
+				"                     O+ O-                   ",
+				"C_.D_.E_.F_.G_.A_.B_.C_.B_.A_.G_.F_.E_.D_.C_.",
 			];
 		}
 		else
